@@ -1,45 +1,47 @@
 MOOD_GENRES = {
 
     "happy": [
-        "Comedy",
-        "Adventure",
-        "Family"
+        "comedy",
+        "family",
+        "adventure"
     ],
 
     "sad": [
-        "Drama",
-        "Romance"
-    ],
-
-    "romantic": [
-        "Romance",
-        "Drama"
-    ],
-
-    "motivated": [
-        "Biography",
-        "Sport"
+        "drama",
+        "romance"
     ],
 
     "relaxed": [
-        "Animation",
-        "Family",
-        "Fantasy"
+        "comedy",
+        "family",
+        "drama"
     ],
 
-    "scared": [
-        "Horror",
-        "Thriller"
-    ],
-
-    "thoughtful": [
-        "Mystery",
-        "Sci-Fi"
+    "motivated": [
+        "biography",
+        "sport",
+        "history"
     ],
 
     "excited": [
-        "Action",
-        "Adventure",
-        "Thriller"
+        "action",
+        "thriller",
+        "adventure"
+    ],
+
+    "romantic": [
+        "romance",
+        "drama"
+    ],
+
+    "thoughtful": [
+        "mystery",
+        "sci-fi",
+        "drama"
+    ],
+
+    "scared": [
+        "horror",
+        "thriller"
     ]
 }
