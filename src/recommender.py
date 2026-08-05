@@ -1,5 +1,10 @@
-import pandas as pd
 from sklearn.metrics.pairwise import cosine_similarity
+
+from src.movie_search import MovieSearch
+from src.movie_filter import MovieFilter
+from src.mood_classifier import MoodClassifier
+from src.genre_mapper import MOOD_GENRES
+
 
 
 class MovieRecommender:
@@ -8,54 +13,79 @@ class MovieRecommender:
 
         self.movies = dataframe
         self.tfidf_matrix = tfidf_matrix
+        self.movie_search = MovieSearch(dataframe)
+        self.classifier = MoodClassifier()
+        self.filter = MovieFilter(dataframe)
 
     def recommend(
         self,
+        mood_input,
         favourite_movie,
-        candidate_indices,
         top_n=10
     ):
+         # Step 1: Predict Mood
+        mood = self.classifier.predict(mood_input)
 
-        # Find favourite movie
-        movie = self.movies[
-            self.movies["movie_name"].str.lower()
-            ==
-            favourite_movie.lower()
-        ]
+        print(f"Predicted Mood : {mood}")
 
-        if movie.empty:
+        # Step 2: Get Genres
+        genres = MOOD_GENRES[mood]
+
+        print(f"Selected Genres : {genres}")
+
+        # Step 3: Candidate Generation
+        candidate_movies = self.filter.filter_by_genres(genres)
+
+        candidate_indices = candidate_movies.index.tolist()
+
+        # Find the closest matching movie name
+        matched_movie = self.movie_search.find_movie(favourite_movie)
+
+        if matched_movie is None:
             raise ValueError(
-                f"{favourite_movie} not found in dataset."
+                f"No movie found similar to '{favourite_movie}'."
             )
 
-        favourite_index = movie.index[0]
+        print(f"Matched Movie: {matched_movie}")
+
+        # Get the index of the matched movie
+        favourite_index = self.movies[
+            self.movies["movie_name"] == matched_movie
+        ].index[0]
 
         # TF-IDF vector of favourite movie
         favourite_vector = self.tfidf_matrix[favourite_index]
 
-        # Candidate vectors
+        # TF-IDF vectors of candidate movies
         candidate_vectors = self.tfidf_matrix[candidate_indices]
 
-        # Similarity
+        # Calculate cosine similarity
         similarity_scores = cosine_similarity(
             favourite_vector,
             candidate_vectors
         ).flatten()
 
-        recommendations = self.movies.loc[
-            candidate_indices
-        ].copy()
+        # Create recommendations dataframe
+        recommendations = self.movies.loc[candidate_indices].copy()
 
         recommendations["similarity_score"] = similarity_scores
 
-        # Remove favourite movie if it appears
+        # Remove the favourite movie itself
         recommendations = recommendations[
             recommendations.index != favourite_index
         ]
 
+        # Sort by similarity
         recommendations = recommendations.sort_values(
             by="similarity_score",
             ascending=False
         )
 
-        return recommendations.head(top_n)
+        # Return Top N recommendations
+        return {
+    "predicted_mood": mood,
+    "matched_movie": matched_movie,
+    "recommendations": recommendations.head(top_n)
+}
+
+  
