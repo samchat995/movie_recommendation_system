@@ -1,5 +1,6 @@
 import re
 
+
 class MoodClassifier:
 
     def __init__(self):
@@ -11,27 +12,42 @@ class MoodClassifier:
                 "joy",
                 "great",
                 "excited",
+                "exciting",
                 "fun",
+                "funny",
                 "cheerful",
                 "awesome",
-                "smile"
+                "smile",
+                "celebrate",
+                "party",
+                "laugh",
+                "hilarious"
             ],
 
             "sad": [
                 "sad",
+                "sadness",
                 "cry",
                 "depressed",
                 "heartbroken",
                 "upset",
-                "lonely"
+                "lonely",
+                "grief",
+                "miserable",
+                "tear"
             ],
 
             "romantic": [
                 "love",
+                "loved",
                 "romantic",
                 "date",
                 "partner",
-                "relationship"
+                "relationship",
+                "miss",
+                "crush",
+                "kiss",
+                "valentine"
             ],
 
             "motivated": [
@@ -40,17 +56,24 @@ class MoodClassifier:
                 "goal",
                 "winner",
                 "career",
-                "inspire"
+                "inspire",
+                "achieve",
+                "ambition",
+                "drive"
             ],
 
             "relaxed": [
                 "stress",
+                "stressful",
                 "stressed",
                 "tired",
                 "calm",
                 "peace",
                 "relax",
-                "sleep"
+                "sleep",
+                "lazy",
+                "chill",
+                "bored"
             ],
 
             "scared": [
@@ -58,7 +81,10 @@ class MoodClassifier:
                 "ghost",
                 "scary",
                 "horror",
-                "afraid"
+                "afraid",
+                "terrified",
+                "creepy",
+                "haunted"
             ],
 
             "thoughtful": [
@@ -66,14 +92,19 @@ class MoodClassifier:
                 "life",
                 "future",
                 "philosophy",
-                "deep"
+                "deep",
+                "reflect",
+                "meaning",
+                "existential"
             ],
 
             "excited": [
                 "action",
                 "thrill",
                 "adventure",
-                "adrenaline"
+                "adrenaline",
+                "intense",
+                "fast"
             ]
         }
 
@@ -97,13 +128,20 @@ class MoodClassifier:
 
             for word in words:
 
-                if word in text:
+                # Use word boundary matching to avoid partial word matches
+                # e.g., "fun" should not match "funny", "sad" should not match "saddle"
+                pattern = r"\b" + re.escape(word) + r"\b"
+
+                if re.search(pattern, text):
 
                     scores[mood] += 1
 
         predicted = max(scores, key=scores.get)
 
         if scores[predicted] == 0:
-            return "neutral"
+            return "relaxed"
 
-        return predicted
+        return {
+            "mood": predicted,
+            "confidence": scores[predicted] / sum(scores.values())
+        }

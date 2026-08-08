@@ -43,5 +43,11 @@ MOOD_GENRES = {
     "scared": [
         "horror",
         "thriller"
+    ],
+
+    "neutral": [
+        "drama",
+        "comedy"
     ]
+
 }

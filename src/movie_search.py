@@ -19,10 +19,23 @@ class MovieSearch:
 
         if result is None:
             return None
-        
+
         matched_movie, score, _ = result
         print(f"Matched movie: {matched_movie} ({score:.1f}%)")
 
-    
-
         return matched_movie
+
+    def find_movie_index(self, user_input):
+         matched_movie = self.find_movie(user_input)
+
+         if matched_movie is None:
+            return None
+
+         match = self.movies[
+            self.movies["movie_name"] == matched_movie
+        ]
+
+         if match.empty:
+            return None
+
+         return match.index[0]
