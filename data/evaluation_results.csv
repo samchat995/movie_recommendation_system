@@ -1,0 +1,6 @@
+input_movie,matched_movie,predicted_mood,recommendation_count,average_similarity,max_similarity,error
+Jawan,jawan,happy,2,0.021294405484090763,0.02575354720924042,
+Interstellar,war,happy,2,0.011628137463671664,0.015310623956633356,
+Titanic,,,0,,,No movie found similar to 'Titanic'.
+Toy Story,,,0,,,No movie found similar to 'Toy Story'.
+The Dark Knight,,,0,,,No movie found similar to 'The Dark Knight'.

@@ -16,19 +16,30 @@ recommender = MovieRecommender(
     tfidf_matrix
 )    
 
-st.title("🎬 Mood-Based Movie Recommendation System")
+st.title("🎬 MoodFlix")
+st.subheader("Movie recommendations based on how you feel")
 
 st.write(
-    "Tell me how you're feeling and I'll recommend movies for you."
+    "Tell me your mood and a movie you love. "
+    "I'll find movies that match your mood and taste."
 )
 
-user_input = st.text_input(
-    "How are you feeling today?"
-)
+col1, col2 = st.columns(2)
 
-favourite_movie = st.text_input(
-    "What's your favourite movie?"
+with col1:
+    user_input = st.text_input(
+        "How are you feeling today?"
+    )
+
+with col2:
+    st.caption(
+    "Examples: "
+    "I'm feeling stressed and want something relaxing, "
+    "I'm excited and want something intense."
 )
+    favourite_movie = st.text_input(
+        "What's your favourite movie?"
+    )
 
 recommend_button = st.button(
     "🎬 Recommend Movies"
@@ -37,17 +48,24 @@ recommend_button = st.button(
 
 if recommend_button:
 
-    if not user_input:
-        st.warning("Please tell me how you're feeling.")
+    if not user_input.strip():
+        st.warning("Please describe how you're feeling.")
 
-    elif not favourite_movie:
+    elif not favourite_movie.strip():
         st.warning("Please enter your favourite movie.")
 
     else:
-      result = recommender.recommend(
+      top_n = st.slider(
+        "Number of recommendations",
+         min_value=5,
+         max_value=10,
+         value=10
+      )
+      with st.spinner("🎬 Finding movies for you..."):    
+        result = recommender.recommend(
              mood_input=user_input,
              favourite_movie=favourite_movie,
-             top_n=10
+             top_n=top_n
             )
 
        
@@ -55,21 +73,23 @@ if recommend_button:
         # Detected Mood
       st.subheader("🧠 Detected Mood")
 
+      detected_mood = result["predicted_mood"]
+
+      st.subheader("🧠 Your Mood")
+
       st.success(
-            result["predicted_mood"].capitalize()
-        )
+          f"You seem to be feeling **{detected_mood.capitalize()}**"
+      )
 
         # Matched Movie
-      st.subheader("🎬 Your Movie")
+      st.subheader("❤️ Based on your favourite")
 
-      st.write(
-            result["matched_movie"]
-        )
+      st.info(
+          f"Matched movie: **{result['matched_movie']}**"
+      )
 
         # Recommendations
       st.subheader("🍿 Recommended Movies")
-
-      recommendations = result["recommendations"]
 
       recommendations = result["recommendations"]
 
@@ -85,19 +105,17 @@ if recommend_button:
         
 
         # Movie Details
-      for _, movie in recommendations.iterrows():
+      st.subheader("🍿 Recommended Movies")
 
-            st.write(
-                f"### 🎬 {movie['movie_name']}"
-            )
+      for i, (_, movie) in enumerate(recommendations.iterrows(),start=1):
+          st.write(
+            f"### {i}. 🎬 {movie['movie_name']}"
+          )
 
-            st.write(
-                f"Year: {movie['year']}"
-            )
+          st.write(
+            f"Year: {movie['year']}  |  "
+            f"Similarity: {movie['similarity_score']:.2%}"
+          )
 
-            st.write(
-                f"Similarity: {movie['similarity_score']:.2f}"
-            )
-
-            st.divider()
+          st.divider()
               

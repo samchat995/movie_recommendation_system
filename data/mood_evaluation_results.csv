@@ -1,0 +1,8 @@
+input,predicted_mood,matched_movie,recommendation_count
+I am feeling very happy today,happy,jawan,2
+I feel sad and lonely,sad,jawan,10
+I am feeling stressed and want something relaxing,relaxed,jawan,10
+I want something exciting and intense,happy,jawan,2
+I am scared and want something frightening,relaxed,jawan,10
+I want a romantic movie tonight,romantic,jawan,10
+I feel motivated and want something inspiring,relaxed,jawan,10

@@ -1,0 +1,8 @@
+input,predicted_mood,keywords,candidate_count
+I am feeling very happy today,happy,"comedy, family, adventure",2
+I feel sad and lonely,sad,"drama, romance",1552
+I am feeling stressed and want something relaxing,relaxed,"comedy, family, drama",1552
+I want something exciting and intense,happy,"comedy, family, adventure",2
+I am scared and want something frightening,relaxed,"comedy, family, drama",1552
+I want a romantic movie tonight,romantic,"romance, drama",1552
+I feel motivated and want something inspiring,relaxed,"comedy, family, drama",1552
