@@ -24,11 +24,18 @@ class MovieRecommender:
     ):
         # Step 1: Predict Mood
         prediction = self.classifier.predict(mood_input)
-        mood = prediction["mood"]
-        confidence = prediction["confidence"]
+
+        if isinstance(prediction, dict):
+            mood = prediction["mood"]
+            confidence = prediction["confidence"]
+        else:
+            mood = prediction
+            confidence = None
 
         print(f"Predicted Mood : {mood}")
-        print(f"Mood Confidence : {confidence:.0%}")
+
+        if confidence is not None:
+            print(f"Mood Confidence : {confidence:.0%}")
 
         # Step 2: Get Genres
         genres = MOOD_GENRES.get(mood)
